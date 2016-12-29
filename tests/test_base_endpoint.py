@@ -1,6 +1,6 @@
 import pytest
 
-from pymarsys.sync.base_endpoint import BaseEndpoint
+from pymarsys.base_endpoint import BaseEndpoint
 
 
 class TestBaseEndpoint:

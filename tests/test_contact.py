@@ -1,8 +1,8 @@
 import pytest
 import responses
 
-from pymarsys.sync.contact import Contact
-from pymarsys import SyncEmarsys
+from pymarsys.contact import Contact
+from pymarsys import Emarsys
 
 EMARSYS_URI = 'https://api.emarsys.net/'
 TEST_USERNAME = 'test_username'
@@ -23,6 +23,12 @@ EMARSYS_SETTINGS_RESPONSE = {
     'replyText': 'OK'
 }
 
+EMARSYS_CREATE_CONTACT_RESPONSE = {
+    'data': {'id': 123456789},
+    'replyCode': 0,
+    'replyText': 'OK'
+}
+
 
 class TestContact:
     @responses.activate
@@ -34,7 +40,7 @@ class TestContact:
             status=200,
             content_type='application/json'
         )
-        client = SyncEmarsys(TEST_USERNAME, TEST_SECRET)
+        client = Emarsys(TEST_USERNAME, TEST_SECRET)
         Contact(client)
 
     @responses.activate
@@ -49,4 +55,23 @@ class TestContact:
         with pytest.raises(TypeError):
             Contact(123)
 
+    @responses.activate
+    def test_contact_create(self):
+        responses.add(
+            responses.GET,
+            '{}{}'.format(EMARSYS_URI, 'api/v2/settings'),
+            json=EMARSYS_SETTINGS_RESPONSE,
+            status=200,
+            content_type='application/json'
+        )
+        responses.add(
+            responses.POST,
+            '{}{}'.format(EMARSYS_URI, 'api/v2/contact'),
+            json=EMARSYS_CREATE_CONTACT_RESPONSE,
+            status=200,
+            content_type='application/json'
+        )
+        client = Emarsys(TEST_USERNAME, TEST_SECRET)
 
+        response = client.contacts.create({'3': 'squirrel@squirrelmail.com'})
+        assert response == EMARSYS_CREATE_CONTACT_RESPONSE

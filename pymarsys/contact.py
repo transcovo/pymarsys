@@ -2,10 +2,10 @@ from .base_endpoint import BaseEndpoint
 
 
 class Contact(BaseEndpoint):
-    def __init__(self, sync_emarsys):
-        super().__init__(sync_emarsys)
+    def __init__(self, emarsys):
+        super().__init__(emarsys)
 
-    def create_contact(self, contact, key_id=None, source_id=None):
+    def create(self, contact, key_id=None, source_id=None):
         """
         Creates a contact from a dict.
         :param contact: Key-value pairs which uniquely identify the contact
@@ -14,7 +14,8 @@ class Contact(BaseEndpoint):
         contact).
         :param key_id: Key which identifies the contacts.
         :param source_id: ID assigned to the customer’s application, used to
-        differentiate contacts created or modified by the external applications.
+        differentiate contacts created or modified by the external
+        applications.
         :return: Dictionary with the id of the created contact.
         """
         payload = contact
@@ -23,9 +24,8 @@ class Contact(BaseEndpoint):
         if source_id:
             payload['source_id'] = source_id
 
-        return self.sync_emarsys.make_call(
+        return self.emarsys.make_call(
             'api/v2/contact',
             method='POST',
             payload=payload
         )
-
