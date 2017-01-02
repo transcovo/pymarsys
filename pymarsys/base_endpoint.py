@@ -1,15 +1,15 @@
 from abc import ABC, abstractmethod
+from .connections import BaseConnection
 
 
 class BaseEndpoint(ABC):
+    """
+    This forces all endpoint objects to have a connection method and an
+    endpoint attribute.
+    """
     @abstractmethod
-    def __init__(self, sync_emarsys):
-        # This might look like a circular dependency, but it is not.
-        # Here, the Emarsys class is used only to check that the
-        # instantiated BaseEndpoint object is bound to an already existent
-        # Emarsys object. Otherwise, it would not be able to make calls
-        # to the Emarys api. That is why this import is deferred.
-        from .emarsys import Emarsys
-        self.emarsys = sync_emarsys
-        if not isinstance(self.emarsys, Emarsys):
-            raise TypeError('emarsys must be an Emarsys object.')
+    def __init__(self, connection, endpoint):
+        self.connection = connection
+        self.endpoint = endpoint
+        if not isinstance(self.connection, BaseConnection):
+            raise TypeError('connection must be a BaseConnection object.')

@@ -8,8 +8,9 @@
 
 ### Synchronous example:
 ```python
-    >>> from pymarsys import Emarsys
-    >>> client = Emarsys('username', 'secret')
+    >>> from pymarsys import SyncConnection, Emarsys
+    >>> connection = SyncConnection('username', 'secret')
+    >>> client = Emarsys(connection)
     >>> client.contacts.create({'3': 'squirrel@squirrelmail.com'})
     {'data': {'id': 19739576}, 'replyCode': 0, 'replyText': 'OK'}
 ```
@@ -17,8 +18,9 @@
 ### Asynchronous example:
 ```python
     >>> import asyncio
-    >>> from pymarsys import Emarsys
-    >>> client = Emarsys('username', 'secret', is_async=True)
+    >>> from pymarsys import AsyncConnection, Emarsys
+    >>> connection = AsyncConnection('username', 'secret')
+    >>> client = Emarsys(connection)
     >>> coroutine = client.contacts.create({'3': 'squirrel@squirrelmail.com'})
     >>> loop = asyncio.get_event_loop()
     >>> loop.run_until_complete(coroutine)

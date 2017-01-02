@@ -2,12 +2,15 @@ from .base_endpoint import BaseEndpoint
 
 
 class Contact(BaseEndpoint):
-    def __init__(self, emarsys):
-        super().__init__(emarsys)
+    """
+    Class representation of the Contacts endpoint.
+    """
+    def __init__(self, connection, endpoint='api/v2/contact'):
+        super().__init__(connection, endpoint)
 
     def create(self, contact, key_id=None, source_id=None):
         """
-        Creates a contact from a dict.
+        Create a contact from a dict.
         :param contact: Key-value pairs which uniquely identify the contact
         fields which will be created for the contact (e.g. a key can be the
         email field ID (3), and its value is the email address of the specific
@@ -24,8 +27,8 @@ class Contact(BaseEndpoint):
         if source_id:
             payload['source_id'] = source_id
 
-        return self.emarsys.make_call(
-            'api/v2/contact',
-            method='POST',
+        return self.connection.make_call(
+            'POST',
+            self.endpoint,
             payload=payload
         )

@@ -1,8 +1,8 @@
 import pytest
 import responses
 
+from pymarsys.connections import SyncConnection
 from pymarsys.contact import Contact
-from pymarsys import Emarsys
 
 EMARSYS_URI = 'https://api.emarsys.net/'
 TEST_USERNAME = 'test_username'
@@ -40,8 +40,8 @@ class TestContact:
             status=200,
             content_type='application/json'
         )
-        client = Emarsys(TEST_USERNAME, TEST_SECRET)
-        Contact(client)
+        connection = SyncConnection(TEST_USERNAME, TEST_SECRET)
+        Contact(connection)
 
     @responses.activate
     def test_init_exception(self):
@@ -71,7 +71,8 @@ class TestContact:
             status=200,
             content_type='application/json'
         )
-        client = Emarsys(TEST_USERNAME, TEST_SECRET)
+        connection = SyncConnection(TEST_USERNAME, TEST_SECRET)
+        contacts = Contact(connection)
 
-        response = client.contacts.create({'3': 'squirrel@squirrelmail.com'})
+        response = contacts.create({'3': 'squirrel@squirrelmail.com'})
         assert response == EMARSYS_CREATE_CONTACT_RESPONSE
