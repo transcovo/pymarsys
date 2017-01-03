@@ -21,7 +21,7 @@ class Contact(BaseEndpoint):
         applications.
         :return: Dictionary with the id of the created contact.
         """
-        payload = contact
+        payload = dict(contact)
         if key_id:
             payload['key_id'] = key_id
         if source_id:

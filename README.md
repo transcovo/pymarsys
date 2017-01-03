@@ -17,11 +17,19 @@
 
 ### Asynchronous example:
 ```python
-    >>> import asyncio
     >>> from pymarsys import AsyncConnection, Emarsys
-    >>> connection = AsyncConnection('username', 'secret')
-    >>> client = Emarsys(connection)
-    >>> coroutine = client.contacts.create({'3': 'squirrel@squirrelmail.com'})
+    >>> async def my_async_func():
+    ...     connection = AsyncConnection('username', 'secret')
+    ...     client = Emarsys(connection)
+    ...     return await client.contacts.create({'3': 'squirrel@squirrelmail.com'})
+    >>> my_async_func()
+    <coroutine object AsyncConnection.make_call at 0x10c44bd58>
+```
+
+#### You will need an event loop to get the result of your coroutine. Here is an example using asyncio's event loop:
+```python
+    >>> import asyncio
+    >>> coroutine = my_async_func()
     >>> loop = asyncio.get_event_loop()
     >>> loop.run_until_complete(coroutine)
     {'data': {'id': 19739576}, 'replyCode': 0, 'replyText': 'OK'}
