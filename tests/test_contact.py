@@ -1,5 +1,6 @@
 import pytest
 import responses
+from urllib.parse import urljoin
 
 from pymarsys.connections import SyncConnection
 from pymarsys.contact import Contact
@@ -29,44 +30,29 @@ EMARSYS_CREATE_CONTACT_RESPONSE = {
     'replyText': 'OK'
 }
 
+EMARSYS_CREATE_MANY_CONTACTS_RESPONSE = {
+    'data': {
+        'ids': [523033975, 523033197]
+    },
+    'replyCode': 0,
+    'replyText': 'OK'
+}
+
 
 class TestContact:
-    @responses.activate
     def test_init_no_exception(self):
-        responses.add(
-            responses.GET,
-            '{}{}'.format(EMARSYS_URI, 'api/v2/settings'),
-            json=EMARSYS_SETTINGS_RESPONSE,
-            status=200,
-            content_type='application/json'
-        )
         connection = SyncConnection(TEST_USERNAME, TEST_SECRET)
         Contact(connection)
 
-    @responses.activate
     def test_init_exception(self):
-        responses.add(
-            responses.GET,
-            '{}{}'.format(EMARSYS_URI, 'api/v2/settings'),
-            json=EMARSYS_SETTINGS_RESPONSE,
-            status=200,
-            content_type='application/json'
-        )
         with pytest.raises(TypeError):
             Contact(123)
 
     @responses.activate
-    def test_contact_create(self):
-        responses.add(
-            responses.GET,
-            '{}{}'.format(EMARSYS_URI, 'api/v2/settings'),
-            json=EMARSYS_SETTINGS_RESPONSE,
-            status=200,
-            content_type='application/json'
-        )
+    def test_create(self):
         responses.add(
             responses.POST,
-            '{}{}'.format(EMARSYS_URI, 'api/v2/contact'),
+            urljoin(EMARSYS_URI, 'api/v2/contact'),
             json=EMARSYS_CREATE_CONTACT_RESPONSE,
             status=200,
             content_type='application/json'
@@ -76,3 +62,23 @@ class TestContact:
 
         response = contacts.create({'3': 'squirrel@squirrelmail.com'})
         assert response == EMARSYS_CREATE_CONTACT_RESPONSE
+
+    @responses.activate
+    def test_create_many(self):
+        responses.add(
+            responses.POST,
+            urljoin(EMARSYS_URI, 'api/v2/contact'),
+            json=EMARSYS_CREATE_MANY_CONTACTS_RESPONSE,
+            status=200,
+            content_type='application/json'
+        )
+        connection = SyncConnection(TEST_USERNAME, TEST_SECRET)
+        contacts = Contact(connection)
+
+        response = contacts.create_many(
+            [
+                {'3': 'squirrel1@squirrelmail.com'},
+                {'3': 'squirrel2@squirrelmail.com'},
+            ]
+        )
+        assert response == EMARSYS_CREATE_MANY_CONTACTS_RESPONSE
