@@ -94,7 +94,7 @@ class TestAsyncConnection():
         )
         with aioresponses() as m:
             m.get(
-                '{}{}'.format(EMARSYS_URI, 'api/v2/settings'),
+                urljoin(EMARSYS_URI, 'api/v2/settings'),
                 status=200,
                 payload=EMARSYS_SETTINGS_RESPONSE
             )

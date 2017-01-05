@@ -3,7 +3,6 @@ import base64
 import datetime
 import hashlib
 import json
-import os
 from urllib.parse import urljoin
 import uuid
 
@@ -82,7 +81,8 @@ class SyncConnection(BaseConnection):
                   method,
                   endpoint,
                   headers=None,
-                  payload=None):
+                  payload=None,
+                  params=None):
         """
         Make an authenticated synchronous HTTP call to the Emarsys api using
         the requests library.
@@ -90,10 +90,14 @@ class SyncConnection(BaseConnection):
         :param endpoint: Emarsys' api endpoint.
         :param headers: HTTP headers.
         :param payload: HTTP payload.
+        :param params: HTTP params.
         :return: Dictionary with the result of the query.
         """
         if not payload:
             payload = {}
+
+        if not params:
+            params = {}
 
         url = urljoin(self.uri, endpoint)
         headers = self.build_headers(headers)
@@ -101,7 +105,8 @@ class SyncConnection(BaseConnection):
             method,
             url,
             headers=headers,
-            json=payload
+            json=payload,
+            params=params
         )
         response.raise_for_status()
         return response.json()
@@ -119,7 +124,8 @@ class AsyncConnection(BaseConnection):
                         method,
                         endpoint,
                         headers=None,
-                        payload=None):
+                        payload=None,
+                        params=None):
         """
         Make an authenticated asynchronous HTTP call to the Emarsys api using
         the aiohttp library.
@@ -127,10 +133,14 @@ class AsyncConnection(BaseConnection):
         :param endpoint: Emarsys' api endpoint.
         :param headers: HTTP headers.
         :param payload: HTTP payload.
+        :param params : HTTP params.
         :return: Coroutine with the result of the query.
         """
         if not payload:
             payload = {}
+
+        if not params:
+            params = {}
 
         url = urljoin(self.uri, endpoint)
         headers = self.build_headers(headers)
@@ -138,7 +148,8 @@ class AsyncConnection(BaseConnection):
                 method,
                 url,
                 headers=headers,
-                data=json.dumps(payload)
+                data=json.dumps(payload),
+                params=params
         ) as response:
             response.raise_for_status()
             return await response.json()
