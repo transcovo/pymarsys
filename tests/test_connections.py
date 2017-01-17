@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+from urllib.parse import urljoin
 
 from aioresponses import aioresponses
 import responses
@@ -51,15 +52,7 @@ class TestBaseConnection():
 
 
 class TestSyncConnection():
-    @responses.activate
     def test_init(self):
-        responses.add(
-            responses.GET,
-            '{}{}'.format(EMARSYS_URI, 'api/v2/settings'),
-            json=EMARSYS_SETTINGS_RESPONSE,
-            status=200,
-            content_type='application/json'
-        )
         connection = SyncConnection(TEST_USERNAME, TEST_SECRET, EMARSYS_URI)
 
         assert connection.username == TEST_USERNAME
@@ -70,7 +63,7 @@ class TestSyncConnection():
     def test_make_call(self):
         responses.add(
             responses.GET,
-            '{}{}'.format(EMARSYS_URI, 'api/v2/settings'),
+            urljoin(EMARSYS_URI, 'api/v2/settings'),
             json=EMARSYS_SETTINGS_RESPONSE,
             status=200,
             content_type='application/json'
@@ -83,37 +76,25 @@ class TestSyncConnection():
 
 class TestAsyncConnection():
     def test_init(self):
-        with aioresponses() as m:
-            m.get(
-                '{}{}'.format(EMARSYS_URI, 'api/v2/settings'),
-                status=200,
-                payload=EMARSYS_SETTINGS_RESPONSE
-            )
-            connection = AsyncConnection(
-                TEST_USERNAME,
-                TEST_SECRET,
-                EMARSYS_URI
-            )
+        connection = AsyncConnection(
+            TEST_USERNAME,
+            TEST_SECRET,
+            EMARSYS_URI
+        )
 
-            assert connection.username == TEST_USERNAME
-            assert connection.secret == TEST_SECRET
-            assert connection.uri == EMARSYS_URI
+        assert connection.username == TEST_USERNAME
+        assert connection.secret == TEST_SECRET
+        assert connection.uri == EMARSYS_URI
 
     def test_make_call(self):
+        connection = AsyncConnection(
+            TEST_USERNAME,
+            TEST_SECRET,
+            EMARSYS_URI
+        )
         with aioresponses() as m:
             m.get(
-                '{}{}'.format(EMARSYS_URI, 'api/v2/settings'),
-                status=200,
-                payload=EMARSYS_SETTINGS_RESPONSE
-            )
-            connection = AsyncConnection(
-                TEST_USERNAME,
-                TEST_SECRET,
-                EMARSYS_URI
-            )
-        with aioresponses() as m:
-            m.get(
-                '{}{}'.format(EMARSYS_URI, 'api/v2/settings'),
+                urljoin(EMARSYS_URI, 'api/v2/settings'),
                 status=200,
                 payload=EMARSYS_SETTINGS_RESPONSE
             )
