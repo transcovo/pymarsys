@@ -196,7 +196,7 @@ class TestContact:
 
         response = contacts.query(
             3,
-            field_id_dict={1: 'Squirrel'},
+            query_tuple=(1, 'Squirrel'),
             limit=2
         )
         assert response == EMARSYS_CONTACTS_LIST_DATA_RESPONSE
@@ -241,7 +241,7 @@ class TestContact:
         assert response == EMARSYS_CONTACTS_GET_CONTACT_HISTORY_RESPONSE
 
     @responses.activate
-    def test_fetch_internal_id(self):
+    def test_get_internal_id(self):
         responses.add(
             responses.GET,
             urljoin(
@@ -259,7 +259,7 @@ class TestContact:
         connection = SyncConnection(TEST_USERNAME, TEST_SECRET)
         contacts = Contact(connection)
 
-        response = contacts.fetch_internal_id(
+        response = contacts.get_internal_id(
             3,
             'squirrel@squirrelmail.com'
         )
