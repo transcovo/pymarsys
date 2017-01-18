@@ -28,6 +28,7 @@ class PyTest(TestCommand):
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 
+
 assert sys.version_info >= (3, 4, 2), "We only support Python 3.4.2+"
 
 if sys.argv[-1] == 'publish':

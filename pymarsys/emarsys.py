@@ -1,4 +1,5 @@
 from .contact import Contact
+from .contact_field import ContactField
 
 
 class Emarsys:
@@ -14,3 +15,4 @@ class Emarsys:
     def __init__(self, connection):
         self.connection = connection
         self.contacts = Contact(self.connection)
+        self.contact_fields = ContactField(self.connection)

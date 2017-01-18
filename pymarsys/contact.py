@@ -44,8 +44,9 @@ class Contact(BaseEndpoint):
         :return: Dictionary with the id of the created contact.
 
         Examples:
-        If you want to create a contact which email is squirrel@squirrelmail.com,
-        which first name is Donald and which last name is Trump:
+        If you want to create a contact which email is
+        squirrel@squirrelmail.com, which first name is Donald and which last
+        name is Trump:
         >>> client.contacts.create(
         ...     {3: 'squirrel@squirrelmail.com', 1: 'Donald', 2: 'Trump'}
         ... )

@@ -9,7 +9,6 @@ EMARSYS_URI = 'https://api.emarsys.net/'
 CONTACT_ENDPOINT = 'api/v2/contact/'
 TEST_USERNAME = 'test_username'
 TEST_SECRET = 'test_secret'
-TEST_SETTINGS = {'test': 'settings'}
 
 EMARSYS_SETTINGS_RESPONSE = {
     'data': {
