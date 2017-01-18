@@ -1,5 +1,7 @@
 # pymarsys: Python client for the Emarsys API
 
+[![CircleCI](https://circleci.com/gh/transcovo/pymarsys.svg?style=svg)](https://circleci.com/gh/transcovo/pymarsys)
+
 pymarsys allows you to choose the type of execution you want for the client: synchronous or asynchronous.
 
 **Warning**: pymarsys is currently under development and on **Pre-Alpha** version. Use with caution! 
