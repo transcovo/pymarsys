@@ -6,8 +6,8 @@ import json
 from urllib.parse import urljoin
 import uuid
 
+import aiohttp
 import requests
-from aiohttp import ClientSession
 
 EMARSYS_URI = 'https://api.emarsys.net/'
 
@@ -108,7 +108,15 @@ class SyncConnection(BaseConnection):
             json=payload,
             params=params
         )
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            raise ApiCallError(
+                'Error message: "{}" \n Error details: "{}"'.format(
+                    err,
+                    response.text
+                )
+            )
         return response.json()
 
 
@@ -118,7 +126,7 @@ class AsyncConnection(BaseConnection):
     """
     def __init__(self, username, secret, uri=EMARSYS_URI):
         super().__init__(username, secret, uri)
-        self.session = ClientSession()
+        self.session = aiohttp.ClientSession()
 
     async def make_call(self,
                         method,
@@ -151,5 +159,13 @@ class AsyncConnection(BaseConnection):
                 data=json.dumps(payload),
                 params=params
         ) as response:
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except aiohttp.errors.HttpProcessingError as err:
+                raise ApiCallError(
+                    'Error message: "{}" \n Error details: "{}"'.format(
+                        err,
+                        await response.text()
+                    )
+                )
             return await response.json()
