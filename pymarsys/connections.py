@@ -168,4 +168,6 @@ class AsyncConnection(BaseConnection):
                         await response.text()
                     )
                 )
-            return await response.json()
+            if response.headers['Content-Type'] == 'text/json':
+                return await response.json()
+            return json.loads(await response.text())
