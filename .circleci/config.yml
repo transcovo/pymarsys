@@ -1,0 +1,25 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: circleci/python:3.5-stretch
+    steps:
+      - checkout
+      - run: sudo pip install --upgrade pip
+      - run: sudo pip install codecov
+      - run:
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - run:
+          command: |
+            . venv/bin/activate
+            py.test tests
+
+workflows:
+  version: 2
+  test_and_build:
+    jobs:
+      - test
