@@ -161,7 +161,7 @@ class AsyncConnection(BaseConnection):
         ) as response:
             try:
                 response.raise_for_status()
-            except aiohttp.errors.HttpProcessingError as err:
+            except aiohttp.ClientError as err:
                 raise ApiCallError(
                     'Error message: "{}" \n Error details: "{}"'.format(
                         err,
