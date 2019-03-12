@@ -41,11 +41,11 @@ packages = [
 
 requires = [
     'requests>=2.12.1',
-    'aiohttp>=1.2.0',
+    'aiohttp>=3.5.4',
 ]
 test_requirements = [
     'pytest==3.0.4',
-    'aioresponses==0.1.2',
+    'aioresponses==0.5.1',
     'responses==0.5.1',
     'pytest-cov',
 ]
