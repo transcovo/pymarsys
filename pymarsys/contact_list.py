@@ -29,7 +29,7 @@ class ContactList(BaseEndpoint):
 
     def create(self, name, key_id=3, with_contacts_id=None, description=None):
         """
-        Create a contact list from a dictionary.
+        Create a contact list.
         https://dev.emarsys.com/v2/contact-lists/create-a-contact-list
         :param name: name of the list to create
         :param key_id: Key which identifies the contact. This can be a field
