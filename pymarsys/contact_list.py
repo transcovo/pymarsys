@@ -27,7 +27,7 @@ class ContactList(BaseEndpoint):
     def __init__(self, connection, endpoint="api/v2/contactlist/"):
         super().__init__(connection, endpoint)
 
-    def create(self, name, key_id=3, with_contacts_id=None, description=None):
+    def create(self, name, key_id=3, with_contacts_ids=None, description=None):
         """
         Create a contact list.
         https://dev.emarsys.com/v2/contact-lists/create-a-contact-list
@@ -35,7 +35,7 @@ class ContactList(BaseEndpoint):
         :param key_id: Key which identifies the contact. This can be a field
         id, id, uid or eid. If left empty, the email address (field ID 3) will
         be used by default.
-        :param with_contacts: list of key's value to add to the list. e.g. ['squirrel@squirrelmail.com',]
+        :param with_contacts_ids: list of key's value to add to the list. e.g. ['squirrel@squirrelmail.com',]
         :param description: Additional information about the contact list.
         :return: The API response payload.
 .
@@ -48,18 +48,18 @@ class ContactList(BaseEndpoint):
             "key_id": key_id,
             "name": name,
             "description": description,
-            "external_ids": with_contacts_id,
+            "external_ids": with_contacts_ids,
         }
 
         return self.connection.make_call("POST", self.endpoint, payload=payload)
 
-    def add_contacts(self, list_id, contacts_id, key_id=3):
+    def add_contacts(self, list_id, contacts_ids, key_id=3):
         """
         Add multiple contacts to an existing list.
         https://dev.emarsys.com/v2/contact-lists/add-contacts-to-a-contact-list
 
         :param list_id: Identifier of the list you want to add a contact to.
-        :param contacts_id: List of contact identifier you want to add to the list
+        :param contacts_ids: List of contact identifier you want to add to the list
         :param key_id: Key which identifies the contact. This can be a field
         id, id, uid or eid. If left empty, the email address (field ID 3) will
         be used by default.
@@ -71,7 +71,7 @@ class ContactList(BaseEndpoint):
         {'data': {'inserted_contacts': 123}, 'replyCode': 0, 'replyText': 'OK'}
         """
 
-        payload = {"key_id": key_id, "external_ids": contacts_id}
+        payload = {"key_id": key_id, "external_ids": contacts_ids}
 
-        endpoint = f"{self.endpoint}{list_id}/add/"
+        endpoint = "{}{}/add/".format(self.endpoint, list_id)
         return self.connection.make_call("POST", endpoint, payload=payload)

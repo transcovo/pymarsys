@@ -19,12 +19,11 @@ EMARSYS_CONTACT_LIST_CREATE_RESPONSE = {
 ADD_TO_CONTACT_LIST_ENDPOINT = "api/v2/contactlist/1/add/"
 
 
-EMARSYS_ADD_TO_CONTACT_LIST_CREATE_RESPONSE = {
+EMARSYS_ADD_TO_CONTACT_LIST_RESPONSE = {
     "replyCode": 0,
     "replyText": "OK",
     "data": {"inserted_contacts": 1},
 }
-
 
 class TestContactList:
     def test_init_no_exception(self):
@@ -54,7 +53,7 @@ class TestContactList:
         responses.add(
             responses.POST,
             urljoin(EMARSYS_URI, ADD_TO_CONTACT_LIST_ENDPOINT),
-            json=EMARSYS_ADD_TO_CONTACT_LIST_CREATE_RESPONSE,
+            json=EMARSYS_ADD_TO_CONTACT_LIST_RESPONSE,
             status=200,
             content_type="application/json",
         )
@@ -62,4 +61,4 @@ class TestContactList:
         contact_list = ContactList(connection)
 
         response = contact_list.add_contacts(1, ["squirrel1@squirrelmail.com"])
-        assert response == EMARSYS_ADD_TO_CONTACT_LIST_CREATE_RESPONSE
+        assert response == EMARSYS_ADD_TO_CONTACT_LIST_RESPONSE
